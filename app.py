@@ -315,6 +315,14 @@ def iter():
   print_block_chain()
   return put_blockchain_in_json()
 
+@app.route('/ui/<accountNumber>')
+def ui(accountNumber=None):
+   return render_template('ui.html', accountNumber=accountNumber)
+
+@app.route('/newPage')
+def newPage():
+   return render_template('newPage.html')
+
 #change depending on network and computer!
 #port should be good tho   
 app.run(host='10.250.85.46', port=8080)
