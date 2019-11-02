@@ -72,7 +72,7 @@ def create_gen_block():
     r = req.get('http://10.250.85.46:8080/getBlockchain')
     bchain = convert_json_to_blockchain(r.text)
     blockchain = bchain
-    return blockchain[0]
+  return blockchain[0]
 	
 blockchain = [create_gen_block()]
 previous_block = blockchain[0]
@@ -137,8 +137,7 @@ def get_blockchains():
   
 def parse_json_ip_blockchains(jfile):
   data = json.dumps(jfile)
-  for bchains in data['blockchainIps']:
-    print('IP: ' + bchains['ip'])
+  return data
 	
 def call_blockchain_with_ip(ip, port, loc):
   url = ip + ":" + port + "/" + loc
@@ -178,6 +177,10 @@ def updateIps():
   for ip in other_blockchains:
     try:
       r = req.get(ip + "/getBlockChains")
+      print("the response")
+      print(r)
+    except requests.exceptions.Timeout:
+      print("timeout!")
     except req.exceptions.RequestException as e:
       print("error!")
     print(r.text)
