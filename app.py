@@ -8,6 +8,7 @@ import requests as req
 from Block import Block
 import json
 import codecs
+import socket
 
 app = Flask(__name__)
 
@@ -17,8 +18,10 @@ miner_addr = "q3nf394hjg-random-miner-address-34nf3i4nflkn3oi"
 users = []
 
 other_blockchains = ['http://10.250.14.33:8080', 'http://10.250.19.148:8080']
-#change this
-myip = 'http://10.250.85.46:8080'
+
+local_address = socket.gethostbyname(socket.gethostname())
+
+myip = 'http://' + local_address + ':8080'
 
 #user data fabrication 
 
@@ -334,5 +337,5 @@ def iter():
 
 #change depending on network and computer!
 #port should be good tho   
-app.run(host='10.250.85.46', port=8080)
+app.run(host=local_address, port=8080)
    
