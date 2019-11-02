@@ -1,0 +1,910 @@
+{
+	"info": {
+		"name": "HACKATHON_APIS",
+		"_postman_id": "4b66351a-1260-6a90-720a-4be25e86755f",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "APX",
+			"description": "",
+			"item": [
+				{
+					"name": "Accounts",
+					"description": "",
+					"item": [
+						{
+							"name": "Get Accounts",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{access_token}}"
+									},
+									{
+										"key": "transactionId",
+										"value": "{{$guid}}"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "http://ncrqe-qe.apigee.net/digitalbanking/db-accounts/v1/accounts?hostUserId=HACKATHONUSER001",
+									"protocol": "http",
+									"host": [
+										"ncrqe-qe",
+										"apigee",
+										"net"
+									],
+									"path": [
+										"digitalbanking",
+										"db-accounts",
+										"v1",
+										"accounts"
+									],
+									"query": [
+										{
+											"key": "hostUserId",
+											"value": "HACKATHONUSER001",
+											"equals": true
+										}
+									]
+								},
+								"description": "Make sure to update the request url with your \"HACKATHON\" user."
+							},
+							"response": []
+						},
+						{
+							"name": "Get Account",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{access_token}}"
+									},
+									{
+										"key": "transactionId",
+										"value": "fdd1542a-bcfd-439b-a6a1-5a064023b0ce"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "http://ncrqe-qe.apigee.net/digitalbanking/db-accounts/v1/accounts/rf5ao6Qclwsth9OfOvUb-EeV1m2BfmTzUEALGLQ3ehU?hostUserId=HACKATHONUSER100",
+									"protocol": "http",
+									"host": [
+										"ncrqe-qe",
+										"apigee",
+										"net"
+									],
+									"path": [
+										"digitalbanking",
+										"db-accounts",
+										"v1",
+										"accounts",
+										"rf5ao6Qclwsth9OfOvUb-EeV1m2BfmTzUEALGLQ3ehU"
+									],
+									"query": [
+										{
+											"key": "hostUserId",
+											"value": "HACKATHONUSER100",
+											"equals": true
+										}
+									]
+								},
+								"description": "Make sure to update the request url with the id of the account you want to get (eg. \"rf5ao6Qclwsth9OfOvUb-EeV1m2BfmTzUEALGLQ3ehU\") and your \"HACKATHON\" user."
+							},
+							"response": []
+						}
+					],
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "Transactions",
+					"description": "",
+					"item": [
+						{
+							"name": "APX - Get Transactions",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{access_token}}"
+									},
+									{
+										"key": "transactionId",
+										"value": "fdd1542a-bcfd-439b-a6a1-5a064023b0ce"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "http://ncrqe-qe.apigee.net/digitalbanking/db-transactions/v1/transactions?accountId=rf5ao6Qclwsth9OfOvUb-EeV1m2BfmTzUEALGLQ3ehU&hostUserId=HACKATHONUSER100",
+									"protocol": "http",
+									"host": [
+										"ncrqe-qe",
+										"apigee",
+										"net"
+									],
+									"path": [
+										"digitalbanking",
+										"db-transactions",
+										"v1",
+										"transactions"
+									],
+									"query": [
+										{
+											"key": "accountId",
+											"value": "rf5ao6Qclwsth9OfOvUb-EeV1m2BfmTzUEALGLQ3ehU",
+											"equals": true
+										},
+										{
+											"key": "hostUserId",
+											"value": "HACKATHONUSER100",
+											"equals": true
+										}
+									]
+								},
+								"description": "Make sure to update the request url with the id of the account you want to get (eg. \"rf5ao6Qclwsth9OfOvUb-EeV1m2BfmTzUEALGLQ3ehU\") and your \"HACKATHON\" user."
+							},
+							"response": []
+						}
+					],
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "Recipient",
+					"description": "",
+					"item": [
+						{
+							"name": "Create Recipient",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"id": "258f30ca-8a45-4cda-85d4-59fa85eb8cd6",
+										"type": "text/javascript",
+										"exec": [
+											""
+										]
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"id": "18b52484-a9c4-49c5-a34b-82be0938bfd6",
+										"type": "text/javascript",
+										"exec": [
+											""
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "transactionId",
+										"value": "{{$guid}}"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{access_token}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"memberNumber\":\"HACKATHONUSER001\",\n\t\"accountNumber\":\"9548055007\",\n\t\"accountType\":\"CHECKING\",\n\t\"passCode\":\"foo\",\n\t\"email\":\"di.api.qal1@gmail.com\",\n\t\"nickName\":\"hackathon 1\"\n}"
+								},
+								"url": {
+									"raw": "http://ncrqe-qe.apigee.net/digitalbanking/db-recipients/v1/recipients?hostUserId=HACKATHONUSER100",
+									"protocol": "http",
+									"host": [
+										"ncrqe-qe",
+										"apigee",
+										"net"
+									],
+									"path": [
+										"digitalbanking",
+										"db-recipients",
+										"v1",
+										"recipients"
+									],
+									"query": [
+										{
+											"key": "hostUserId",
+											"value": "HACKATHONUSER100",
+											"equals": true
+										}
+									]
+								},
+								"description": "Make sure to update the request url and body with your \"HACKATHON\" user and account information."
+							},
+							"response": []
+						},
+						{
+							"name": "Get Recipients",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"id": "fbe8f275-572a-4a46-9586-50abf02cd2ba",
+										"type": "text/javascript",
+										"exec": [
+											""
+										]
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"id": "20cef2b4-d52b-4444-81f1-679b291419bc",
+										"type": "text/javascript",
+										"exec": [
+											""
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "transactionId",
+										"value": "{{$guid}}"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{access_token}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "http://ncrqe-qe.apigee.net/digitalbanking/db-recipients/v1/recipients?hostUserId=HACKATHONUSER100",
+									"protocol": "http",
+									"host": [
+										"ncrqe-qe",
+										"apigee",
+										"net"
+									],
+									"path": [
+										"digitalbanking",
+										"db-recipients",
+										"v1",
+										"recipients"
+									],
+									"query": [
+										{
+											"key": "hostUserId",
+											"value": "HACKATHONUSER100",
+											"equals": true
+										}
+									]
+								},
+								"description": "Make sure to update the request url with your \"HACKATHON\" user."
+							},
+							"response": []
+						},
+						{
+							"name": "Get Recipient",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"id": "498e7e2a-f4c8-41f4-83c5-82c9e2841126",
+										"type": "text/javascript",
+										"exec": [
+											"pm.environment.set(\"recipients-uuid\", require('uuid').v4());"
+										]
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"id": "4102d337-dbf0-4ba0-96a3-791c9d0ce08e",
+										"type": "text/javascript",
+										"exec": [
+											""
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "transactionId",
+										"value": "{{$guid}}"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{access_token}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "http://ncrqe-qe.apigee.net/digitalbanking/db-recipients/v1/recipients/4591e2f7aef549258fd811b38b19635d?hostUserId=HACKATHONUSER100",
+									"protocol": "http",
+									"host": [
+										"ncrqe-qe",
+										"apigee",
+										"net"
+									],
+									"path": [
+										"digitalbanking",
+										"db-recipients",
+										"v1",
+										"recipients",
+										"4591e2f7aef549258fd811b38b19635d"
+									],
+									"query": [
+										{
+											"key": "hostUserId",
+											"value": "HACKATHONUSER100",
+											"equals": true
+										}
+									]
+								},
+								"description": "Make sure to update the request url with your recipient id (eg. \"4591e2f7aef549258fd811b38b19635d\") and your\"HACKATHON\" user."
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Recipient",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.environment.set(\"recipients-uuid\", require('uuid').v4());"
+										],
+										"id": "498e7e2a-f4c8-41f4-83c5-82c9e2841126",
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"id": "e52fe167-a69e-47bf-bb47-7d7bc092e841",
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "transactionId",
+										"value": "{{$guid}}"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{access_token}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "http://ncrqe-qe.apigee.net/digitalbanking/db-recipients/v1/recipients/4591e2f7aef549258fd811b38b19635d?hostUserId=HACKATHONUSER100",
+									"protocol": "http",
+									"host": [
+										"ncrqe-qe",
+										"apigee",
+										"net"
+									],
+									"path": [
+										"digitalbanking",
+										"db-recipients",
+										"v1",
+										"recipients",
+										"4591e2f7aef549258fd811b38b19635d"
+									],
+									"query": [
+										{
+											"key": "hostUserId",
+											"value": "HACKATHONUSER100",
+											"equals": true
+										}
+									]
+								},
+								"description": "Make sure to update the request url with your recipient id (eg. \"4591e2f7aef549258fd811b38b19635d\") and your\"HACKATHON\" user."
+							},
+							"response": []
+						},
+						{
+							"name": "Update Recipient",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"id": "498e7e2a-f4c8-41f4-83c5-82c9e2841126",
+										"type": "text/javascript",
+										"exec": [
+											"pm.environment.set(\"recipients-uuid\", require('uuid').v4());"
+										]
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"id": "9a2df474-9930-4cf8-84f8-1ac673a06071",
+										"type": "text/javascript",
+										"exec": [
+											""
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "transactionId",
+										"value": "{{$guid}}"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{access_token}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"id\": \"4591e2f7aef549258fd811b38b19635d\",\n\t\"memberNumber\":\"HACKATHONUSER001\",\n\t\"accountNumber\":\"9548055007\",\n\t\"accountType\":\"CHECKING\",\n\t\"passCode\":\"foo\",\n\t\"email\":\"di.api.qal1@gmail.com\",\n\t\"nickName\":\"hackathon 1\"\n}"
+								},
+								"url": {
+									"raw": "http://ncrqe-qe.apigee.net/digitalbanking/db-recipients/v1/recipients/4591e2f7aef549258fd811b38b19635d?fromAccountId=9548055007&hostUserId=HACKATHONUSER100",
+									"protocol": "http",
+									"host": [
+										"ncrqe-qe",
+										"apigee",
+										"net"
+									],
+									"path": [
+										"digitalbanking",
+										"db-recipients",
+										"v1",
+										"recipients",
+										"4591e2f7aef549258fd811b38b19635d"
+									],
+									"query": [
+										{
+											"key": "fromAccountId",
+											"value": "9548055007",
+											"equals": true
+										},
+										{
+											"key": "hostUserId",
+											"value": "HACKATHONUSER100",
+											"equals": true
+										}
+									]
+								},
+								"description": "Make sure to update the body with your account information and the request url with your recipient id (eg. \"4591e2f7aef549258fd811b38b19635d\") account id (eg. \"9548055007\") and your\"HACKATHON\" user"
+							},
+							"response": []
+						},
+						{
+							"name": "Validate Recipient",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.environment.set(\"recipients-uuid\", require('uuid').v4());"
+										],
+										"id": "498e7e2a-f4c8-41f4-83c5-82c9e2841126",
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"//Load pxlib",
+											"var pxlib = eval(pm.globals.get(\"pxlib\"));",
+											"",
+											"//Start testing using pxlib",
+											"startPXTest(pm, pm.globals.get(\"useStrictValidation\"));",
+											"",
+											"//Validate response status code",
+											"expectResponseStatusCodeToBe(200);",
+											"",
+											"//Validate response headers",
+											"expectResponseToHaveHeader(\"transactionId\", pm.environment.get(\"recipients-uuid\"));",
+											"",
+											"//Validate response body",
+											"expectResponseBodyToHaveJsonProperty(\"memberNumber\", \"apigeerec01\");",
+											"expectResponseBodyToHaveJsonProperty(\"accountNumber\", \"9990001004\");",
+											"expectResponseBodyToHaveJsonProperty(\"accountType\", \"SAVINGS\");",
+											"expectResponseBodyToHaveJsonProperty(\"passCode\", \"foo\");",
+											"",
+											"",
+											"//End testing using pxlib",
+											"endPXTest();"
+										],
+										"id": "a56804d7-9878-45cf-abd0-e9ddde4720cb",
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "transactionId",
+										"value": "{{$guid}}"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{access_token}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"memberNumber\":\"HACKATHONUSER100\",\n\t\"accountNumber\":\"9548055007\",\n\t\"accountType\":\"CHECKING\",\n\t\"passCode\":\"foo\"\n}"
+								},
+								"url": {
+									"raw": "http://ncrqe-qe.apigee.net/digitalbanking/db-recipients/v1/recipients?validate=true&fromAccountId=9548055007&hostUserId=HACKATHONUSER100",
+									"protocol": "http",
+									"host": [
+										"ncrqe-qe",
+										"apigee",
+										"net"
+									],
+									"path": [
+										"digitalbanking",
+										"db-recipients",
+										"v1",
+										"recipients"
+									],
+									"query": [
+										{
+											"key": "validate",
+											"value": "true",
+											"equals": true
+										},
+										{
+											"key": "fromAccountId",
+											"value": "9548055007",
+											"equals": true
+										},
+										{
+											"key": "hostUserId",
+											"value": "HACKATHONUSER100",
+											"equals": true
+										}
+									]
+								},
+								"description": "Make sure to update the body with your account information and the request url with your recipient id (eg. \"4591e2f7aef549258fd811b38b19635d\") account id (eg. \"9548055007\") and your\"HACKATHON\" user"
+							},
+							"response": []
+						}
+					],
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "Transfers",
+					"description": "",
+					"item": [
+						{
+							"name": "Create Transfer",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "3f3027ca-f37a-4b1a-8dc2-fb20d4cf9339",
+										"type": "text/javascript",
+										"exec": [
+											""
+										]
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"id": "2a18ae27-aac4-47ec-a963-6250fb2b56c7",
+										"type": "text/javascript",
+										"exec": [
+											""
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{access_token}}"
+									},
+									{
+										"key": "transactionId",
+										"value": "{{$guid}}"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"fromAccountHolderId\":\"24b369240a034da58e25aaff1a205508\",\n\t\"fromAccountId\":\"rf5ao6Qclwsth9OfOvUb-EeV1m2BfmTzUEALGLQ3ehU\",\n\t\"toAccountId\":\"U1fgmemAI-KNjGpoZkKGnS1jNJZa_h222o9Dcmj9Yx0\",\n\t\"amount\":{\n\t\t\"amount\":1.0\n\t}\n}"
+								},
+								"url": {
+									"raw": "http://ncrqe-qe.apigee.net/digitalbanking/db-transfers/v1/transfers?hostUserId=HACKATHONUSER100",
+									"protocol": "http",
+									"host": [
+										"ncrqe-qe",
+										"apigee",
+										"net"
+									],
+									"path": [
+										"digitalbanking",
+										"db-transfers",
+										"v1",
+										"transfers"
+									],
+									"query": [
+										{
+											"key": "hostUserId",
+											"value": "HACKATHONUSER100",
+											"equals": true
+										}
+									]
+								},
+								"description": "Make sure to update the request url with your \"HACKATHON\" user."
+							},
+							"response": []
+						}
+					],
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "Run First - Get Token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "1ae4dba0-e878-41e3-b4fa-f7dbc5fec3fe",
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"postman.setEnvironmentVariable(\"access_token\", jsonData.access_token);",
+									"postman.setEnvironmentVariable(\"refresh_token\", jsonData.refresh_token);",
+									""
+								]
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "e1acf5e5-4a2d-4f4f-b4c0-0fa9d77918be",
+								"type": "text/javascript",
+								"exec": [
+									"//This request requires shared-key and secret-key environment variables to exist",
+									"//The values for the Date and Authorization headers on the request must not be changed",
+									"var shared = \"\";",
+									"var secret = \"\";",
+									"",
+									"//Get request verb",
+									"var method = pm.request.method;",
+									"",
+									"//Get URI and headers from request",
+									"var uri = pm.request.url.getPathWithQuery();",
+									"var headers = pm.request.headers;",
+									"",
+									"//Get contentType from headers, replace with value from variable if needed",
+									"var contentType = headers.get(\"Content-Type\");",
+									"if(contentType && contentType.startsWith(\"{{\")) {",
+									"    contentType = pm.globals.get(contentType.slice(2, contentType.length-2));",
+									"}",
+									"",
+									"//Get md5Hash from headers, replace with value from variable if needed",
+									"var md5Hash = headers.get(\"Content-MD5\");",
+									"if(md5Hash && md5Hash.startsWith(\"{{\")) {",
+									"    md5Hash = pm.globals.get(md5Hash.slice(2, md5Hash.length-2));",
+									"}",
+									"",
+									"//Get app key from headers, replace with value from variable if needed",
+									"var appkey = headers.get(\"nep-application-key\");",
+									"if(appkey && appkey.startsWith(\"{{\")) {",
+									"    appkey = pm.globals.get(appkey.slice(2, appkey.length-2));",
+									"}",
+									"",
+									"//Get correlation ID from headers, replace with value from variable if needed",
+									"var correlationId = headers.get(\"nep-correlation-id\");",
+									"if(correlationId && correlationId.startsWith(\"{{\")) {",
+									"    correlationId = pm.globals.get(correlationId.slice(2, correlationId.length-2));",
+									"}",
+									"",
+									"//Get target org from headers, replace with value from variable if needed",
+									"var org = headers.get(\"nep-organization\");",
+									"if(org && org.startsWith(\"{{\")) {",
+									"    org = pm.globals.get(org.slice(2, org.length-2));",
+									"}",
+									"",
+									"//Get service version on request from headers, replace with value from variable if needed",
+									"var serviceVersion = headers.get(\"nep-service-version\");",
+									"if(serviceVersion && serviceVersion.startsWith(\"{{\")) {",
+									"    serviceVersion = pm.globals.get(serviceVersion.slice(2, serviceVersion.length-2));",
+									"}",
+									"",
+									"//Returns an ISO 8601 date time string for HMAC, and sets date header per RFC 7231 ",
+									"function isoTime() {",
+									"    var d = new Date();",
+									"    d.setMilliseconds(0);",
+									"    pm.globals.set(\"date\", d.toUTCString());",
+									"    return d.toISOString();",
+									"}",
+									"",
+									"//Time stamp for signing",
+									"var time = isoTime();",
+									"",
+									"//Compiles the data to sign",
+									"var oneTimeSecret = secret +  time;",
+									"var toSign = method + \"\\n\" + uri;",
+									"if(contentType) {",
+									"    toSign += \"\\n\" + contentType.trim();",
+									"}",
+									"if(md5Hash) {",
+									"    toSign += \"\\n\" + md5Hash.trim();",
+									"}",
+									"if(appkey) {",
+									"    toSign += \"\\n\" + appkey.trim();",
+									"}",
+									"if(correlationId) {",
+									"    toSign += \"\\n\" + correlationId.trim();",
+									"}",
+									"if(org) {",
+									"    toSign += \"\\n\" + org.trim();",
+									"}",
+									"if(serviceVersion) {",
+									"    toSign += \"\\n\" + serviceVersion.trim();",
+									"}",
+									"",
+									"//Import crypto-js, create signature and set in header",
+									"var cryptojs = require('crypto-js');",
+									"var key = cryptojs.HmacSHA512(toSign, oneTimeSecret);",
+									"var accessKey = shared + \":\" + cryptojs.enc.Base64.stringify(key);",
+									"pm.globals.set(\"access-token\", accessKey);"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							},
+							{
+								"key": "Authorization",
+								"value": "Basic NDAxZGFhYjIyZTNiNDAxNjgwZTY4ZTk0NmNiZWI5YzI6MDgxMDBmYjIyYWYzNDBmZGIwZDBjYmNjZTViMGJjMmU="
+							},
+							{
+								"key": "transactionId",
+								"value": "f3df8be7-621d-4278-994a-1f3d6a156c1d"
+							},
+							{
+								"key": "institutionId",
+								"value": "DI0516"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Date",
+								"value": "{{date}}"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "grant_type",
+									"type": "text",
+									"value": "password"
+								},
+								{
+									"key": "scopes",
+									"type": "text",
+									"value": "accounts:read,transactions:read,transfers:write,account:write,institution-users:read,recipients:read,recipients:write,recipients:delete,disclosures:read,disclosures:write"
+								},
+								{
+									"key": "username",
+									"type": "text",
+									"value": "HACKATHONUSER001"
+								},
+								{
+									"key": "password",
+									"type": "text",
+									"value": "test123"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://ncrqe-qe.apigee.net/digitalbanking/oauth2/v1/token",
+							"protocol": "http",
+							"host": [
+								"ncrqe-qe",
+								"apigee",
+								"net"
+							],
+							"path": [
+								"digitalbanking",
+								"oauth2",
+								"v1",
+								"token"
+							]
+						},
+						"description": "You need to run this request to get the token to call the other apis. \nPlease enter your shared and secret keys in the \"pre-request script\" tab. To obtain your key and secret, register your application through our Developer portal, accessible here: https://api-developer-qe.ncrcloud.com.\n\nThis token will expire, so you'll need to get a new one about every 45 mins. Once your token has been returned, it will automatically fill into the other requests with the postman environment variable {{access_token}}"
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
