@@ -133,11 +133,23 @@ def getBlockDataWithHash(hash):
   return str(block.decrypt_data(block.private_key))
 
 def get_blockchains():
-  return json.dumps(other_blockchains)
-  
+  #return json.dumps(other_blockchains)
+  blist = {}
+  blist['blockchainIps'] = []
+  for ip in other_blockchains:
+    blist['blockchainIps'].append({
+	  'ip' : ip
+	})
+  return blist
+
+#IP FILE OKAY  
 def parse_json_ip_blockchains(jfile):
+  #data = json.dumps(jfile)
+  #return data
+  print(jfile)
   data = json.dumps(jfile)
-  return data
+  for bchains in data:
+    print("IP" + str(bchains))
 	
 def call_blockchain_with_ip(ip, port, loc):
   url = ip + ":" + port + "/" + loc
@@ -181,10 +193,12 @@ def updateIps():
       print(r)
     except requests.exceptions.Timeout:
       print("timeout!")
+    except requests.exceptions.ConnectionError:
+      print("error!")
     except req.exceptions.RequestException as e:
       print("error!")
     print(r.text)
-    t = json.loads(r.text)['blockchainIps']
+    t = json.loads(r.text)
     print(t)
     resp = ip_json_to_list(r.text)
     for i in range(len(t)):
