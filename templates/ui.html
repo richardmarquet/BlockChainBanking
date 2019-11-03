@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Bootstrap Example</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</head>
+<body>
+
+<div class="container">
+  <div class="mx-auto bg-white" style="width:300px" >
+    <h2>Make a Transaction!</h2>
+  </div>
+
+  <form action="http://10.250.85.46:8080/createTransaction" method="POST">
+      <div class="form-group row">
+        <div class="col-6" style="text-align:center; width: 300px">
+          <div classes="bg-white" >
+            <label for="senderAccountID" ><b>Sender Account ID:</b></label>
+          </div>
+        </div>
+        <div class="col-6" style="text-align:center; width: 300px">
+          <div classes="bg-white" >
+            <label for="recieverAccountID" ><b>Reciever Account ID:</b></label>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group row">
+
+        <div class="mx-auto col-6" style="text-align:center; width: 300px">
+          <input class="form-control" type="text" value="{{senderAccountID}}" name="senderAccountID">
+        </div>
+        <div class="mx-auto col-6" style="text-align:center; width: 300px">
+          <input class="form-control" type="text" value = "XXXXXXXXXXXXXXXXXXXXXX-XXXXXXXXXXXXXXXXXXXXXX" name="recipientAccountID">
+        </div>
+
+      </div>
+    <div class="form-group row">
+      <div class="mx-auto bg-white" style="text-align:center; width: 300px" >
+        <label for="transactionAmount"><b>Enter Transaction Amount:</b></label>
+        <input class="form-control" style="text-align:center; width: 300px" type="text" value="0.00" name="transactionAmount">
+      </div>
+
+    </div>
+    <div class="mx-auto bg-white" style="width:150px" >
+      <button class="btn btn-success" type="submit" value="Submit">Send Transaction</button>
+    </div>
+</form>
+</div>
+<script>
+        function getInputValues(){
+            var senderAccountID = document.getElementById("senderAccountID").value;
+            var recieverAccountID = document.getElementById("recipientAccountID").value;
+            var transactionAmount = document.getElementById("transactionAmount").value;
+
+            //call function in app.py
+            transactionAmountAlert = ("Transaction Completed: ").concat(transactionAmount,"$"," \nfrom: ", senderAccountID, "\nto: ", recieverAccountID)
+            alert(transactionAmountAlert);
+        }
+    </script>
+</body>
+</html>
