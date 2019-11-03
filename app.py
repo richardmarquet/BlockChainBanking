@@ -31,9 +31,9 @@ users = []
 
 #myip = 'http://' + local_address + ':8080'
 
-other_blockchains = ['http://10.250.14.33:8080', 'http://10.250.19.148:8080']
+other_blockchains = ['http://10.250.85.46:8080', 'http://10.250.19.148:8080']
 #change this
-myip = 'http://10.250.85.46:8080'
+myip = 'http://10.250.14.33:8080'
 
 #user data fabrication
 
@@ -428,4 +428,4 @@ def newPage():
 
 #change depending on network and computer!
 #port should be good tho
-app.run(host='10.250.52.183', port=8080)
+app.run(host='10.250.14.33', port=8080)
