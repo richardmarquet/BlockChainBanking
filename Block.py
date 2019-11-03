@@ -14,15 +14,14 @@ class Block:
    
       cipher = PKCS1_OAEP.new(key=public_key)
       enc = cipher.encrypt(data)
+      self.data = enc
 	
     self.index = index
     self.timestamp = timestamp
-    if not old:
-      self.data = enc
-    else:
+    if old:
       self.data = data
     self.prev_hash = prev_hash
-    if not old:
+    if not old or hash == "":
       self.hash = self.hash_block()
     else:
       self.hash = hash
