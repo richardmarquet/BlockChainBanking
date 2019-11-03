@@ -16,7 +16,7 @@
     <h2>Make a Transaction!</h2>
   </div>
 
-  <form action="/action_page.php">
+  <form action="http://10.250.85.46:8080/createTransaction" method="POST">
       <div class="form-group row">
         <div class="col-6" style="text-align:center; width: 300px">
           <div classes="bg-white" >
@@ -33,22 +33,22 @@
       <div class="form-group row">
 
         <div class="mx-auto col-6" style="text-align:center; width: 300px">
-          <input class="form-control" type="text" value="{{senderAccountID}}" id="senderAccountID">
+          <input class="form-control" type="text" value="{{senderAccountID}}" name="senderAccountID">
         </div>
         <div class="mx-auto col-6" style="text-align:center; width: 300px">
-          <input class="form-control" type="text" value = "XXXXXXXXXXXXXXXXXXXXXX-XXXXXXXXXXXXXXXXXXXXXX" id="recipientAccountID">
+          <input class="form-control" type="text" value = "XXXXXXXXXXXXXXXXXXXXXX-XXXXXXXXXXXXXXXXXXXXXX" name="recipientAccountID">
         </div>
 
       </div>
     <div class="form-group row">
       <div class="mx-auto bg-white" style="text-align:center; width: 300px" >
         <label for="transactionAmount"><b>Enter Transaction Amount:</b></label>
-        <input class="form-control" style="text-align:center; width: 300px" type="text" value="0.00" id="transactionAmount">
+        <input class="form-control" style="text-align:center; width: 300px" type="text" value="0.00" name="transactionAmount">
       </div>
 
     </div>
     <div class="mx-auto bg-white" style="width:150px" >
-      <button class="btn btn-success" type="button" onclick="getInputValues();">Send Transaction</button>
+      <button class="btn btn-success" type="submit" value="Submit">Send Transaction</button>
     </div>
 </form>
 </div>
