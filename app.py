@@ -109,6 +109,13 @@ def findUserById(id):
     u = json.loads(u)
     if u['id'] == id:
       return u
+	  
+def sendIds():
+  ids = []
+  for u in users:
+    u = json.loads(u)
+	ids.append(json.dumps(u['id']))
+  return ids
 #user stuff
 
   
