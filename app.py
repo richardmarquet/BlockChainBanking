@@ -35,13 +35,13 @@ other_blockchains = ['http://10.250.14.33:8080', 'http://10.250.19.148:8080']
 #change this
 myip = 'http://10.250.85.46:8080'
 
-#user data fabrication 
+#user data fabrication
 
 def genUsers(numUsers):
   url = "http://ncrqe-qe.apigee.net/digitalbanking/db-accounts/v1/accounts/rf5ao6Qclwsth9OfOvUb-EeV1m2BfmTzUEALGLQ3ehU"
 
   querystring = {"hostUserId":"HACKATHONUSER100"}
-  
+
   payload = ""
   headers = {
     'Authorization': "Bearer ME0CnxAeYAmWUNjQglBYyBVCPuHK",
@@ -55,7 +55,7 @@ def genUsers(numUsers):
   #print(response.text)
   baseJson = json.loads(response.text)
   print(baseJson['id'])
-  
+
   for i in range(numUsers):
     baseJson['id'] = str(hashlib.sha224(str(random.randrange(0,10000000)).encode()).hexdigest())
 	
@@ -66,16 +66,17 @@ def genUsers(numUsers):
     public_pem = public_key.export_key().decode()
 	
     baseJson['pubkey'] = public_pem
-    baseJson['prvkey'] = private_pem
+    baseJson['privkey'] = private_pem
+    baseJson['stamp'] = ""
 	
     users.append(json.dumps(baseJson))
-	
+
   for u in users:
     b = json.loads(u)
     #print(u)
     print(b['id'])
     print(b['pubkey'])
-    print(b['prvkey'])
+    print(b['privkey'])
     
 	
 def bytesToList(data):
@@ -84,9 +85,33 @@ def bytesToList(data):
     arr.append(a)
   return arr
 
-#end of user data fabrication
+  
+#for ajax stuff
+@app.route('/createTransaction', methods=["POST"])
+def transactionSR():
+  if request.method == "POST":
+    sender = findUserById(request.form['senderAccountID'])
+    recv = findUserById(request.form['recipientAccountID'])
+    transAmount = request.form['transactionAmount']
+	
+    public_pem = recv['pubkey']
+    pk = RSA.import_key(public_pem)
+    cipher = PKCS1_OAEP.new(key=pk)
+    enc = cipher.encrypt(transAmount.encode())
+    #enc = bytesToList(enc)	
+    sendTransaction("", recv['pubkey'], recv['privkey'], enc, date.datetime.now(), sender['stamp'])
+	
+    return ":D"
 
+#end of user data fabrication
+def findUserById(id):
+  for u in users:
+    u = json.loads(u)
+    if u['id'] == id:
+      return u
 #user stuff
+
+  
 
 #this will create the transaction by sending a post request of the info required to make a block
 #it will then go an create a block using a post call!
@@ -113,7 +138,7 @@ def decrypt(priv, data):
 def convert_json_to_block(jb):
   block = Block(jb['index'],jb['timestamp'],jb['data'],jb['prev_hash'],"",True,jb['public_key'],jb['private_key'], jb['hash'])
   return block
-	
+
 def convert_json_to_blockchain(jbc):
   b = []
   jbc = json.loads(jbc)
@@ -134,7 +159,7 @@ def create_gen_block():
     for u in jfile:
       users.append(u)
     return blockchain[0]
-	
+
 blockchain = [create_gen_block()]
 previous_block = blockchain[0]
 #List of other blockchain ips
@@ -156,11 +181,11 @@ def append_block(data, stamp="", old=False, public_pem="", private_pem="", hash=
   previous_block = block
   print("Block #" + str(block.index) + " has been successfully added!")
   return block
-  
+
 def print_block_chain():
   for block in blockchain:
     print(block)
-	
+
 def put_blockchain_in_json():
   blockList = []
   for block in blockchain:
@@ -171,7 +196,7 @@ def put_blockchain_in_json():
   #print("JSON")
   #print(y)
   return y
- 
+
 def put_block_in_json(block):
   jblock = {
     "index" : block.index,
@@ -184,12 +209,12 @@ def put_block_in_json(block):
 	"msg" : str(block.decrypt_data(block.private_key))
   }
   return jblock
-	
+
 def getBlockWithHash(hash):
   for block in blockchain:
 	  if block.hash == hash:
 	    return block
-		
+
 def getBlockDataWithHash(hash):
   block = getBlockWithHash(hash)
   return str(block.decrypt_data(block.private_key))
@@ -210,6 +235,7 @@ def parse_json_ip_blockchains(jfile):
   #return data
   print(jfile)
   data = json.dumps(jfile)
+
   for bchains in data:
     print("IP" + str(bchains))
 	
@@ -217,26 +243,26 @@ def call_blockchain_with_ip(ip, port, loc):
   url = ip + ":" + port + "/" + loc
   r = req.get(url)
   return r.json()
-	
+
 def get_blockchain_with_ip(ip, port):
   return call_blockchain_with_ip(ip, port, 'viewBlockchain')
-  
+
 def format_data(data):
   print("\nTHE FORMATED DATA -> ")
   t = codecs.encode(data)
   print(t)
- 
+
 #implement
 def compare_blockchains(bchain1, bchain2):
   return ""
-  
+
 def sendBlock(url,block):
   jblock = put_block_in_json(block)
   try:
     r = req.post(url+"/recvBlock",json=jblock)
   except req.exceptions.RequestException as e:
     print("error!")
-	
+
 def ip_json_to_list(jip):
   jip = json.loads(jip)
   arr = []
@@ -268,17 +294,14 @@ def updateIps():
   print("NEWWWWW")
   print(other_blockchains)
   
-def getUserById(id):
-  for u in users:
-    
-  
 #Routes start here
-  
+
 @app.route('/addBlock', methods=['GET', 'POST'])
 def addBlock():
   #you now need to get user data!!! send it in a json file
   #you will need: Hash, public key, private key, enc, timestamp, stamp
   #do error checking first. Check to see if blockchain is up to date/not corrupted
+
   if request.method == "POST":
     jblock = request.json
     print("jblock")
@@ -322,9 +345,7 @@ def addBlock():
   for ip in other_blockchains:
     sendBlock(ip, block)
   return put_block_in_json(block)
-  
-  
-  
+
 @app.route('/getBlockChains')
 def getBlockchainIPS():
   parse_json_ip_blockchains(other_blockchains)
@@ -337,14 +358,14 @@ def recvBlock():
   print(jblock)
   blockchain.append(block)
   return jblock
-  
+
 @app.route('/recvBlockchain', methods=["POST"])
 def recvBlockchain():
   jblockchain = request.json
   blockchain = convert_json_to_blockchain(jblockchain)
   print(blockchain[0])
   return "hm"
-  
+
 @app.route('/sendBlockchain')
 def sendBlockchain():
   jbc = put_blockchain_in_json()
@@ -353,11 +374,11 @@ def sendBlockchain():
   except req.exceptions.RequestException as e:
     print("error!")
   return "done"
-  
+
 @app.route('/getLastBlock')
 def getLastBlock():
   return put_block_in_json(blockchain[len(blockchain)-1])
-  
+
 @app.route('/ncrtest')
 def ncrtest():
   url = "http://ncrqe-qe.apigee.net/digitalbanking/db-accounts/v1/accounts"
@@ -375,27 +396,27 @@ def ncrtest():
 
   response = req.request("GET", url, data=payload, headers=headers, params=querystring)
 
-  return(response.text) 
-  
+  return(response.text)
+
 @app.route('/ncrtest2')
 def genUserData():
   genUsers(10)
   return "YAY!"
-  
+
 @app.route('/sendBlock')
 def sendBlockToIp():
   sendBlock("http://10.250.19.148:8080/recvBlock", blockchain[0])
   return "YOOOO"
-  
+
 @app.route('/getBlockInfo/<hash>')
 def getBlockInfo(hash):
   return put_block_in_json(getBlockWithHash(hash))
-  
+
 @app.route('/getBlockData/<hash>')
 def getBlockData(hash):
   s = getBlockDataWithHash(hash)
   return s
-  
+
 @app.route("/getBlockchain")
 def giveBlockchain():
   return put_blockchain_in_json()
@@ -403,7 +424,7 @@ def giveBlockchain():
 @app.route("/getUsers")
 def giveUsers():
   return json.dumps(users)
-  
+
 @app.route("/viewBlockchain")
 def iter():
   #print_block_chain()
@@ -422,7 +443,14 @@ def iter():
   sendTransaction(hash="", pub=public_pem, priv=private_pem, data=enc, timestamp=date.datetime.now())
   return put_blockchain_in_json()
 
+@app.route('/ui/<senderAccountID>')
+def ui(senderAccountID=None):
+   return render_template('ui.html', senderAccountID=senderAccountID)
+
+@app.route('/newPage')
+def newPage():
+   return render_template('newPage.html')
+
 #change depending on network and computer!
-#port should be good tho   
+#port should be good tho
 app.run(host='10.250.85.46', port=8080)
-   
