@@ -84,6 +84,13 @@ previous_block = blockchain[0]
 
 num_of_blocks = 1
 
+def get_blocks_by_public_key(pub_key):
+  blocks = []
+  for block in blockchain:
+    if block.public_key == pub_key:
+      blocks.append(block)
+  return blocks
+
 def next_block(last_block):
   this_index = last_block.index + 1
   this_timestamp = date.datetime.now()
