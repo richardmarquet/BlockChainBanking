@@ -8,6 +8,14 @@ import requests as req
 from Block import Block
 import json
 import codecs
+import hashlib
+
+from Crypto.Cipher import PKCS1_OAEP
+from Crypto.PublicKey import RSA
+from binascii import hexlify
+
+import random
+
 import socket
 
 app = Flask(__name__)
@@ -17,11 +25,15 @@ miner_addr = "q3nf394hjg-random-miner-address-34nf3i4nflkn3oi"
 #
 users = []
 
+#local_address = socket.gethostbyname(socket.gethostname())
+#local_address = '10.250.85.46'
+#print(local_address)
+
+#myip = 'http://' + local_address + ':8080'
+
 other_blockchains = ['http://10.250.14.33:8080', 'http://10.250.19.148:8080']
-
-local_address = socket.gethostbyname(socket.gethostname())
-
-myip = 'http://' + local_address + ':8080'
+#change this
+myip = 'http://10.250.85.46:8080'
 
 #user data fabrication 
 
@@ -45,17 +57,58 @@ def genUsers(numUsers):
   print(baseJson['id'])
   
   for i in range(numUsers):
-    baseJson['id'] = "test" + str(i)
-    baseJson['pubkey'] = "ooof!!!"
+    baseJson['id'] = str(hashlib.sha224(str(random.randrange(0,10000000)).encode()).hexdigest())
+	
+    private_key = RSA.generate(1024)
+    public_key = private_key.publickey()
+   
+    private_pem = private_key.export_key().decode()
+    public_pem = public_key.export_key().decode()
+	
+    baseJson['pubkey'] = public_pem
+    baseJson['prvkey'] = private_pem
+	
     users.append(json.dumps(baseJson))
 	
   for u in users:
     b = json.loads(u)
+    #print(u)
     print(b['id'])
     print(b['pubkey'])
+    print(b['prvkey'])
     
+	
+def bytesToList(data):
+  arr = []
+  for a in data:
+    arr.append(a)
+  return arr
 
 #end of user data fabrication
+
+#user stuff
+
+#this will create the transaction by sending a post request of the info required to make a block
+#it will then go an create a block using a post call!
+def sendTransaction(hash, pub, priv, data, timestamp, stamp="", ip=myip):
+  block = {
+    'hash' : str(hash),
+	'public_key' : str(pub),
+	'private_key' : str(priv),
+	'data' : bytesToList(data),
+	'timestamp' : str(timestamp),
+	'stamp' : str(stamp)
+  }
+  r = req.post(ip+'/addBlock', json=block)
+  #print(r)
+  #return json.dumps(r.text)
+  
+def decrypt(priv, data):
+  pr_key = RSA.import_key(priv)
+  decrypt = PKCS1_OAEP.new(key=pr_key)
+  decrypted_message = decrypt.decrypt(bytes(data))
+  
+#end of user stuff
 
 def convert_json_to_block(jb):
   block = Block(jb['index'],jb['timestamp'],jb['data'],jb['prev_hash'],"",True,jb['public_key'],jb['private_key'], jb['hash'])
@@ -70,12 +123,17 @@ def convert_json_to_blockchain(jbc):
 
 def create_gen_block():
   if myip == 'http://10.250.85.46:8080':
+    genUsers(10)
     return Block(0, date.datetime.now(), b'Genesis Block', "0")
   else:
     r = req.get('http://10.250.85.46:8080/getBlockchain')
     bchain = convert_json_to_blockchain(r.text)
     blockchain = bchain
-  return blockchain[0]
+    r = req.get('http://10.250.85.46:8080/getUsers')
+    jfile = json.loads(r.text)
+    for u in jfile:
+      users.append(u)
+    return blockchain[0]
 	
 blockchain = [create_gen_block()]
 previous_block = blockchain[0]
@@ -84,23 +142,16 @@ previous_block = blockchain[0]
 
 num_of_blocks = 1
 
-def get_blocks_by_public_key(pub_key):
-  blocks = []
-  for block in blockchain:
-    if block.public_key == pub_key:
-      blocks.append(block)
-  return blocks
-
-def next_block(last_block):
+def next_block(last_block, data, stamp="", old=False, public_pem="", private_pem="", hash=""):
   this_index = last_block.index + 1
   this_timestamp = date.datetime.now()
-  this_data = b"Hey! I'm block " + str.encode(str(this_index))
+  #this_data = b"Hey! I'm block " + str.encode(str(this_index))
   this_hash = last_block.hash
-  return Block(this_index, this_timestamp, this_data, this_hash)
+  return Block(this_index, this_timestamp, data, this_hash, stamp, old, public_pem, private_pem, hash)
   
-def append_block():
+def append_block(data, stamp="", old=False, public_pem="", private_pem="", hash=""):
   global previous_block
-  block = next_block(previous_block)
+  block = next_block(previous_block, data, stamp, old, public_pem, private_pem, hash)
   blockchain.append(block)
   previous_block = block
   print("Block #" + str(block.index) + " has been successfully added!")
@@ -129,7 +180,8 @@ def put_block_in_json(block):
 	"public_key" : str(block.public_key),
 	"private_key" : str(block.private_key),
 	"prev_hash" : str(block.prev_hash),
-	"hash" : str(block.hash)
+	"hash" : str(block.hash),
+	"msg" : str(block.decrypt_data(block.private_key))
   }
   return jblock
 	
@@ -201,66 +253,73 @@ def updateIps():
       r = req.get(ip + "/getBlockChains")
       print("the response")
       print(r)
-    except requests.exceptions.Timeout:
+      t = json.loads(r.text)
+      print(t)
+      #resp = ip_json_to_list(r.text)
+      for i in range(len(t)):
+        if t['blockchainIps'][i]['ip'] not in other_blockchains and t['blockchainIps'][i]['ip'] != myip:
+          other_blockchains.append(t[i]['ip'])
+    except req.exceptions.Timeout:
       print("timeout!")
-    except requests.exceptions.ConnectionError:
+    except req.exceptions.ConnectionError:
       print("error!")
     except req.exceptions.RequestException as e:
       print("error!")
-    print(r.text)
-    t = json.loads(r.text)
-    print(t)
-    resp = ip_json_to_list(r.text)
-    for i in range(len(t)):
-      if t[i]['ip'] not in other_blockchains and t[i]['ip'] != myip:
-        other_blockchains.append(t[i]['ip'])
   print("NEWWWWW")
   print(other_blockchains)
   
+#Routes start here
+  
 @app.route('/addBlock', methods=['GET', 'POST'])
 def addBlock():
+  #you now need to get user data!!! send it in a json file
+  #you will need: Hash, public key, private key, enc, timestamp, stamp
   #do error checking first. Check to see if blockchain is up to date/not corrupted
-  updateIps()
-  blocks =  []
-  for ip in other_blockchains:
-    if ip != myip:
-      try:  
-        r = req.get(ip + "/getLastBlock")
-        resp = json.loads(r.text)
-        b = convert_json_to_block(resp)
-        blocks.append(b)
-        print(b)
-      except req.exceptions.RequestException as e:
-        print("error!")
-  
-  count = 0
-  for block in blocks:
-    if block.hash != previous_block.hash:
-      count += 1
-  if count > 1:
-    print("error detected. . .")
-    print("correcting error. . .")
+  if request.method == "POST":
+    jblock = request.json
+    print("jblock")
+    print(jblock)
+    #updateIps()
+    blocks = []
     for ip in other_blockchains:
       if ip != myip:
-        r = req.get(ip + "/getBlockchain")
-        bchain = convert_json_to_blockchain(r.text)
-        blockchain = bchain
-        break
-  elif count == 1:
-    print("error detected. . .")
-    print("correcting error. . .")
-	#set new blockchain at the other blockchain
-  else:
-    print("no errors detected. . .")
-    print("will append normally!")
+        try:  
+          r = req.get(ip + "/getLastBlock")
+          resp = json.loads(r.text)
+          b = convert_json_to_block(resp)
+          blocks.append(b)
+          print(b)
+        except req.exceptions.RequestException as e:
+          print("error!")
   
-  #
-  block = append_block()
+    count = 0
+    for block in blocks:
+      if block.hash != previous_block.hash:
+        count += 1
+    if count > 1:
+      print("error detected. . .")
+      print("correcting error. . .")
+      for ip in other_blockchains:
+        if ip != myip:
+          r = req.get(ip + "/getBlockchain")
+          bchain = convert_json_to_blockchain(r.text)
+          blockchain = bchain
+          break
+    elif count == 1:
+      print("error detected. . .")
+      print("correcting error. . .")
+	  #set new blockchain at the other blockchain
+    else:
+      print("no errors detected. . .")
+      print("will append normally!")
+  
+  block = append_block(jblock['data'], jblock['stamp'], True, jblock['public_key'], jblock['private_key'], jblock['hash'])
   #send this block to every other blockchain
   for ip in other_blockchains:
     sendBlock(ip, block)
   return put_block_in_json(block)
-	
+  
+  
   
 @app.route('/getBlockChains')
 def getBlockchainIPS():
@@ -337,12 +396,29 @@ def getBlockData(hash):
 def giveBlockchain():
   return put_blockchain_in_json()
   
+@app.route("/getUsers")
+def giveUsers():
+  return json.dumps(users)
+  
 @app.route("/viewBlockchain")
 def iter():
-  print_block_chain()
+  #print_block_chain()
+  #hash, pub, priv, data, timestamp, ip=myip
+  data = b"jason"
+  private_key = RSA.generate(1024)
+  public_key = private_key.publickey()
+   
+  private_pem = private_key.export_key().decode()
+  public_pem = public_key.export_key().decode()
+   
+  cipher = PKCS1_OAEP.new(key=public_key)
+  enc = cipher.encrypt(data)
+  enc = bytesToList(enc)
+  
+  sendTransaction(hash="", pub=public_pem, priv=private_pem, data=enc, timestamp=date.datetime.now())
   return put_blockchain_in_json()
 
 #change depending on network and computer!
 #port should be good tho   
-app.run(host=local_address, port=8080)
+app.run(host='10.250.85.46', port=8080)
    
