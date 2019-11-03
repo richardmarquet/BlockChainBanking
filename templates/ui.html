@@ -12,23 +12,56 @@
 <body>
 
 <div class="container">
-  <h2> Make a Transaction!</h2>
+  <div class="mx-auto bg-white" style="width:300px" >
+    <h2>Make a Transaction!</h2>
+  </div>
+
   <form action="/action_page.php">
-    <div class="form-group row">
-      <input class="col-5 form-control" type="text" value="{{accountNumber}}" id="senderAccountNumber">
-      <div class="col-5">
-        <input class="form-control" type="text" id="recipientAccountNumber">
+      <div class="form-group row">
+        <div class="col-6" style="text-align:center; width: 300px">
+          <div classes="bg-white" >
+            <label for="senderAccountID" ><b>Sender Account ID:</b></label>
+          </div>
+        </div>
+        <div class="col-6" style="text-align:center; width: 300px">
+          <div classes="bg-white" >
+            <label for="recieverAccountID" ><b>Reciever Account ID:</b></label>
+          </div>
+        </div>
       </div>
-    </div>
+
+      <div class="form-group row">
+
+        <div class="mx-auto col-6" style="text-align:center; width: 300px">
+          <input class="form-control" type="text" value="{{senderAccountID}}" id="senderAccountID">
+        </div>
+        <div class="mx-auto col-6" style="text-align:center; width: 300px">
+          <input class="form-control" type="text" value = "XXXXXXXXXXXXXXXXXXXXXX-XXXXXXXXXXXXXXXXXXXXXX" id="recipientAccountID">
+        </div>
+
+      </div>
     <div class="form-group row">
-      <input class="form-control" type="text" value="0.00" id="transactionAmount">
+      <div class="mx-auto bg-white" style="text-align:center; width: 300px" >
+        <label for="transactionAmount"><b>Enter Transaction Amount:</b></label>
+        <input class="form-control" style="text-align:center; width: 300px" type="text" value="0.00" id="transactionAmount">
+      </div>
+
     </div>
-
-
-    <a href="{{ url_for('newPage') }}" class="btn btn-info" role="button">Link Button</a>
-</div>
+    <div class="mx-auto bg-white" style="width:150px" >
+      <button class="btn btn-success" type="button" onclick="getInputValues();">Send Transaction</button>
+    </div>
 </form>
-  </form>
 </div>
+<script>
+        function getInputValues(){
+            var senderAccountID = document.getElementById("senderAccountID").value;
+            var recieverAccountID = document.getElementById("recipientAccountID").value;
+            var transactionAmount = document.getElementById("transactionAmount").value;
+
+            //call function in app.py
+            transactionAmountAlert = ("Transaction Completed: ").concat(transactionAmount,"$"," \nfrom: ", senderAccountID, "\nto: ", recieverAccountID)
+            alert(transactionAmountAlert);
+        }
+    </script>
 </body>
 </html>
